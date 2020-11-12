@@ -6,13 +6,18 @@ pipeline {
    }
 
    stages {
-        stage('Build') {
+        stage('Clone code from GIT') {
             steps {
-                git 'https://github.com/javaee/cargotracker.git'
-            
+                git 'https://github.com/javaee/cargotracker.git'   
+            }
+        }
+      
+        stage('Build maven') {
+            steps {
                 bat "mvn -Dmaven.test.failure.ignore=true clean package"
             }
         }
+      
         stage ('Upload Nexus') {
             steps {
                 nexusPublisher nexusInstanceId: 'demo0.1', nexusRepositoryId: 'demo0.1', packages: [[$class: 'MavenPackage', 
